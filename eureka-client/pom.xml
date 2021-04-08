@@ -6,17 +6,23 @@
         <artifactId>springcloud-all</artifactId>
         <groupId>com.mashibing</groupId>
         <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>eureka-server</artifactId>
+    <artifactId>eureka-client</artifactId>
     <version>1.0</version>
-    <name>eureka-server</name>
-    <description>eureka server demo</description>
+    <name>eureka-client</name>
+    <description>Demo project for Spring Boot</description>
     <properties>
+
     </properties>
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
         <dependency>
