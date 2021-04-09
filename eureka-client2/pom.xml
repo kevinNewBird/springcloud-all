@@ -30,7 +30,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--健康检查组件-->
+        <!--健康检查组件,用来上报节点信息-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
