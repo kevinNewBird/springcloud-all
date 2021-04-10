@@ -10,7 +10,7 @@
     </parent>
     <artifactId>eureka-client2</artifactId>
     <version>1.0</version>
-    <name>eureka-client</name>
+    <name>eureka-client2</name>
     <description>Demo project for Spring Boot</description>
     <properties>
 
