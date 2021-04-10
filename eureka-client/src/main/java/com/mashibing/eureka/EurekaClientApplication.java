@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @EnableEurekaClient
-@SpringBootApplication(scanBasePackages = "com.mashibing.eureka.controller")
+@SpringBootApplication(scanBasePackages = "com.mashibing.eureka")
 public class EurekaClientApplication {
 
     public static void main(String[] args) {

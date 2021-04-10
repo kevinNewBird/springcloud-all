@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 //主要用于获取client1的自定义元数据信息
 @EnableEurekaClient
-@SpringBootApplication(scanBasePackages = "com.mashibing.eureka.controller")
+@SpringBootApplication(scanBasePackages = "com.mashibing.eureka")
 public class EurekaClient2Application {
 
     public static void main(String[] args) {
