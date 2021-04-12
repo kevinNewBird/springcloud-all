@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Random;
 
 /***********************
- * @Description: TODO 类描述<BR>
+ * @Description: fu<BR>
  * @author: zhao.song
  * @since: 2021/4/9 0:25
  * @version: 1.0
@@ -34,16 +35,67 @@ public class MainController2 {
     LoadBalancerClient lb;
 
 
-
-    @GetMapping("/client5")
-    public String client5() {
-
-        String url = "http://provider/hello";
+    @GetMapping("/client6")
+    public String client6() {
+        ServiceInstance instance = lb.choose("provider");
+        String url = "http://" + instance.getHost() + ":" + instance.getPort() + "/hello";
+//        String url = "http://provider/hello";
         System.out.println("url:" + url);
         String respStr = restTemplate.getForObject(url, String.class);
         System.out.println("respStr:" + respStr);
 
-        return "xxxx";
+        return respStr;
+    }
+
+    @Autowired
+    DiscoveryClient discoveryClient;
+    /**
+     * Description: 自定义负载均衡策略 <BR>
+     *
+     * @param :
+     * @return {@link java.lang.String}
+     * @author zhao.song    2021/4/12 17:04
+     */
+    @GetMapping("/client7")
+    public String client7() {
+        List<ServiceInstance> instances = discoveryClient.getInstances("provider");
+
+        // 自定义轮询算法
+        int index = new Random().nextInt(instances.size());
+        // 替代choose
+        ServiceInstance instance = instances.get(index);
+
+        return "respStr";
+    }
+
+    @GetMapping("/client8")
+    public String client8() {
+        ServiceInstance instance = lb.choose("provider");
+        String url = "http://" + instance.getHost() + ":" + instance.getPort() + "/hello";
+//        String url = "http://provider/hello";
+        System.out.println("url:" + url);
+        String respStr = restTemplate.getForObject(url, String.class);
+        System.out.println("respStr:" + respStr);
+
+        return respStr;
+    }
+
+    /**
+     * Description: 自动处理url <BR>
+     *
+     * @author zhao.song    2021/4/12 17:31
+     * @param :
+     * @return {@link java.lang.String}
+     */
+    @GetMapping("/client9")
+    public String client9() {
+        String url = "http://provider/hello";
+//        String url = "http://provider/hello";
+        System.out.println("url:" + url);
+        String respStr = restTemplate.getForObject(url, String.class);
+        System.out.println("respStr:" + respStr);
+
+        return respStr;
     }
 
 }

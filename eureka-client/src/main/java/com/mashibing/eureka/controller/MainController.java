@@ -2,6 +2,7 @@ package com.mashibing.eureka.controller;
 
 import com.mashibing.eureka.service.HealthStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,12 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
 
+    @Value("${server.port}")
+    private String port;
+
     @Autowired
     private HealthStatusService healthService;
 
     @GetMapping("/hello")
     public String sayHello(){
-        return "hello eureka client0";
+        return "hello eureka client0,我的port: " + port;
     }
 
     @GetMapping("/health")
