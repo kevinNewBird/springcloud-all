@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /***********************
  * @Description: fu<BR>
@@ -49,6 +50,7 @@ public class MainController2 {
 
     @Autowired
     DiscoveryClient discoveryClient;
+
     /**
      * Description: 自定义负载均衡策略 <BR>
      *
@@ -61,13 +63,31 @@ public class MainController2 {
         List<ServiceInstance> instances = discoveryClient.getInstances("provider");
 
         // 自定义轮询算法
+        // 随机
         int index = new Random().nextInt(instances.size());
+        AtomicInteger atomic = new AtomicInteger();
+
+        // 轮询
+        int i = atomic.getAndIncrement();
+        int index2 = i % instances.size();
+
+        // 权重
+        for (ServiceInstance instance : instances) {
+            //int weight =  instance.getMetadata(); // 权重1-9
+        }
         // 替代choose
         ServiceInstance instance = instances.get(index);
 
         return "respStr";
     }
 
+    /**
+     * Description: 手动负载均衡 <BR>
+     *
+     * @param :
+     * @return {@link java.lang.String}
+     * @author zhao.song    2021/4/14 0:40
+     */
     @GetMapping("/client8")
     public String client8() {
         ServiceInstance instance = lb.choose("provider");
@@ -83,9 +103,9 @@ public class MainController2 {
     /**
      * Description: 自动处理url <BR>
      *
-     * @author zhao.song    2021/4/12 17:31
      * @param :
      * @return {@link java.lang.String}
+     * @author zhao.song    2021/4/12 17:31
      */
     @GetMapping("/client9")
     public String client9() {
