@@ -1,6 +1,8 @@
 package com.mashibing.eureka.controller;
 
+import com.mashibing.api.UserApi;
 import com.mashibing.eureka.service.IUserService;
+import com.mashibing.eureka.service.IUserServiceV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,11 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private IUserService userService;
+    private IUserServiceV2 userService;
+
+    @Autowired
+    private UserApi api;
 
     @GetMapping("/alive")
     public String alive(){
         return userService.alive();
+    }
+
+    @GetMapping("/isAlive")
+    public String isAlive(){
+        return api.isAlive();
     }
 
     @GetMapping("/register")

@@ -1,18 +1,23 @@
 package com.mashibing.eureka.service;
 
+import com.mashibing.api.UserApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /***********************
  * @Description: 用户远程feign
- *       不结合eureka, 就是自定义一个client名字. 就用url属性指定服务器列表(只需要启动user-provider和user-consumer)<BR>
+ *       结合eureka,使用服务名来进行调用,name使用服务名user-provider, url去掉<BR>
  * @author: zhao.song
  * @since: 2021/4/14 18:09
  * @version: 1.0
  ***********************/
-@FeignClient(name = "xxoo", url = "http://localhost:8090")
-public interface IUserService {
+@FeignClient(name = "user-provider")
+public interface IUserServiceV2 extends UserApi {
 
+
+    /*
+    这种方式何RestTemplate 没有区别, 优点就是没有代码侵入,方便做异构系统
+     */
     @GetMapping("/alive")
     String alive();
 

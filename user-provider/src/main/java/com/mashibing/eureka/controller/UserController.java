@@ -1,5 +1,6 @@
 package com.mashibing.eureka.controller;
 
+import com.mashibing.api.UserApi;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @version: 1.0
  ***********************/
 @RestController
-public class UserController {
+public class UserController implements UserApi {
 
 
-    @GetMapping("/alive")
-    public String alive(){
+    public String isAlive() {
+        return "is ok?";
+    }
+
+    public String alive() {
         return "ok";
     }
 }
