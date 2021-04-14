@@ -17,4 +17,7 @@ public interface UserApi {
     @RequestMapping("/alive")
     public String alive();
 
+    @RequestMapping("/getById")
+    public String getById(Integer id);
+
 }

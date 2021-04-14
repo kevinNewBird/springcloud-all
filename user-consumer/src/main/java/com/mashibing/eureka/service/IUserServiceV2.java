@@ -23,4 +23,7 @@ public interface IUserServiceV2 extends UserApi {
 
     @GetMapping("/register")
     public String register();
+
+    @GetMapping("/getById")
+    public String getById(Integer id);
 }

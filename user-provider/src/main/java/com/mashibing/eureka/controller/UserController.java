@@ -22,4 +22,10 @@ public class UserController implements UserApi {
     public String alive() {
         return "ok";
     }
+
+    @Override
+    public String getById(Integer id) {
+        return String.valueOf(1);
+    }
+
 }

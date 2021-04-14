@@ -32,6 +32,11 @@ public class UserController {
         return api.isAlive();
     }
 
+    @GetMapping("/getById")
+    public String getById(Integer id) {
+        return api.getById(id);
+    }
+
     @GetMapping("/register")
     public String register(){
         return userService.register();
