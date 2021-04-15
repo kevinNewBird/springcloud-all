@@ -19,9 +19,6 @@ public class UserController {
     @Autowired
     private IUserServiceV2 userService;
 
-    @Autowired
-    private UserApi api;
-
     @GetMapping("/alive")
     public String alive(){
         return userService.alive();
@@ -29,12 +26,12 @@ public class UserController {
 
     @GetMapping("/isAlive")
     public String isAlive(){
-        return api.isAlive();
+        return userService.isAlive();
     }
 
     @GetMapping("/getById")
     public String getById(Integer id) {
-        return api.getById(id);
+        return userService.getById(id);
     }
 
     @GetMapping("/register")

@@ -39,6 +39,11 @@
             <artifactId>user-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--        httpClient实现: 主要为了解决feign调用的使用使用的是Get在实际运行后 ->POST   -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

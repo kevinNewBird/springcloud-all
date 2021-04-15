@@ -2,7 +2,7 @@ package com.mashibing.eureka.controller;
 
 import com.mashibing.api.UserApi;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /***********************
@@ -24,8 +24,14 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public String getById(Integer id) {
-        return String.valueOf(1);
+    public String getById(@RequestParam Integer id) {
+        return String.valueOf(id);
+    }
+
+
+    @GetMapping("/register")
+    public String register(){
+        return "success";
     }
 
 }
