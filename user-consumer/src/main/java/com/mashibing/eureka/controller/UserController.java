@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /***********************
  * @Description: TODO 类描述<BR>
  * @author: zhao.song
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
  ***********************/
 @RestController
 public class UserController {
+
+
 
     @Autowired
     private IUserServiceV2 userService;
@@ -38,4 +44,6 @@ public class UserController {
     public String register(){
         return userService.register();
     }
+
+
 }
