@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableFeignClients
-@EnableCircuitBreaker
+@EnableCircuitBreaker//hystrix 整合restTemplate需要加上该注解, 整合feign服务熔断该注解不需要
 public class UserConsumerApplication {
 
     public static void main(String[] args) {
