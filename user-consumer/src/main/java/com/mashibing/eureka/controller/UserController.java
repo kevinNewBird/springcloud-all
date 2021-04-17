@@ -24,34 +24,33 @@ public class UserController {
     private IUserServiceV2 userService;
 
 
+
     /**
-     * Description: 整合restTemplate的服务熔断降级<BR>
+     * Description: 整合Feign熔断 <BR>
      *
-     * @author zhao.song    2021/4/17 20:41
-     * @param :  
+     * @author zhao.song    2021/4/17 21:23
+     * @param :
      * @return {@link java.lang.String}
      */
     @GetMapping("/alive")
-    @HystrixCommand(fallbackMethod = "back", commandProperties = {
-            @HystrixProperty(name = "fallback.enabled", value = "false")
-    })
     public String alive() {
-//        return userService.alive();
-        //1. Hystrix 整合 RestTemplate
-        String response = restTemplate.getForObject("http://user-provider/user/alive", String.class);
-        return response;
+        //1.Hystrix 整合 Feign
+        return  userService.alive();
     }
 
+
     /**
-     * Description: 整合feign的服务熔断降级 <BR>
+     * Description: 整合RestTemplate熔断 <BR>
      *
-     * @author zhao.song    2021/4/17 20:40
-     * @param :  
+     * @author zhao.song    2021/4/17 21:23
+     * @param :
      * @return {@link java.lang.String}
      */
     @GetMapping("/isAlive")
+    @HystrixCommand(fallbackMethod = "back")
     public String isAlive() {
-        return userService.isAlive();
+        //1. Hystrix 整合 RestTemplate
+        return restTemplate.getForObject("http://user-provider/user/isAlive", String.class);
     }
 
     @GetMapping("/getById")

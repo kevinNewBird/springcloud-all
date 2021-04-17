@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @since: 2021/4/15 1:18
  * @version: 1.0
  ***********************/
-@RequestMapping("/user")
+//如果下游同时使用了feign和hystrix,由于这个的存在会导致被注册两次
+// (feign整合hystrix, hystrix的fallback需要集成feign的入口)
+//@RequestMapping("/user")
 public interface UserApi {
 
     @RequestMapping("/isAlive")

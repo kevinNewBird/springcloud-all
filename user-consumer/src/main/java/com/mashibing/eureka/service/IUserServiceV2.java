@@ -1,6 +1,7 @@
 package com.mashibing.eureka.service;
 
 import com.mashibing.api.UserApi;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @since: 2021/4/14 18:09
  * @version: 1.0
  ***********************/
-@FeignClient(name = "user-provider")
+@FeignClient(name = "user-provider",fallback = UserProviderBack.class)
 public interface IUserServiceV2 extends UserApi {
 
     /**
