@@ -23,7 +23,7 @@ public class UserProviderBack implements IUserServiceV2 {
 
     @Override
     public String register() {
-        return null;
+        return "降级了";
     }
 
     @Override
