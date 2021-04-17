@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @since: 2021/4/14 18:09
  * @version: 1.0
  ***********************/
-@FeignClient(name = "user-provider",fallback = UserProviderBack.class)
+@FeignClient(name = "user-provider",fallbackFactory = UserProviderBackFactory.class)
 public interface IUserServiceV2 extends UserApi {
 
     /**
