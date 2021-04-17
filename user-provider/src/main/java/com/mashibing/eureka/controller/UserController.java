@@ -90,7 +90,7 @@ public class UserController implements UserApi {
     private void timeout() {
         Optional.of(String.format("simulate hytrix, the port [%s] ready to sleep...", port)).ifPresent(System.out::println);
         try {
-            TimeUnit.MILLISECONDS.sleep(2000);
+            TimeUnit.MILLISECONDS.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
