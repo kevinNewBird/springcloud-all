@@ -1,15 +1,12 @@
 package com.mashibing.eureka.controller;
 
-import com.mashibing.api.UserApi;
-import com.mashibing.eureka.service.IUserService;
 import com.mashibing.eureka.service.IUserServiceV2;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.springframework.web.client.RestTemplate;
 
 /***********************
  * @Description: TODO 类描述<BR>
@@ -20,18 +17,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 public class UserController {
 
-
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private IUserServiceV2 userService;
 
+
+    /**
+     * Description: 整合restTemplate的服务熔断降级<BR>
+     *
+     * @author zhao.song    2021/4/17 20:41
+     * @param :  
+     * @return {@link java.lang.String}
+     */
     @GetMapping("/alive")
-    public String alive(){
-        return userService.alive();
+    @HystrixCommand(fallbackMethod = "back", commandProperties = {
+            @HystrixProperty(name = "fallback.enabled", value = "false")
+    })
+    public String alive() {
+//        return userService.alive();
+        //1. Hystrix 整合 RestTemplate
+        String response = restTemplate.getForObject("http://user-provider/user/alive", String.class);
+        return response;
     }
 
+    /**
+     * Description: 整合feign的服务熔断降级 <BR>
+     *
+     * @author zhao.song    2021/4/17 20:40
+     * @param :  
+     * @return {@link java.lang.String}
+     */
     @GetMapping("/isAlive")
-    public String isAlive(){
+    public String isAlive() {
         return userService.isAlive();
     }
 
@@ -41,8 +60,13 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String register(){
-        return userService.register();
+    public String register() {
+        return null;
+    }
+
+
+    public String back() {
+        return "请求失败~bbb";
     }
 
 
