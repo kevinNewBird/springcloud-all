@@ -6,9 +6,12 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.StringJoiner;
 
 /***********************
  * @Description: TODO 类描述<BR>
@@ -18,6 +21,9 @@ import org.springframework.web.client.RestTemplate;
  ***********************/
 @RestController
 public class UserController {
+
+    @Value("${server.port}")
+    private String port;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -40,7 +46,8 @@ public class UserController {
     @GetMapping("/alive")
     public String alive() {
         //1.Hystrix 整合 Feign
-        return  userService.alive();
+        StringJoiner joiner = new StringJoiner(">>>>>");
+        return joiner.add("Consuemer port:" + port).add(userService.alive()).toString();
     }
 
 
@@ -55,7 +62,8 @@ public class UserController {
     public String isAlive() {
         //1. Hystrix 整合 RestTemplate
 //        return restTemplate.getForObject("http://user-provider/user/isAlive", String.class);
-        return restService.alive();
+        StringJoiner joiner = new StringJoiner(">>>>>");
+        return joiner.add("Consuemer port:" + port).add(restService.alive()).toString();
     }
 
     @GetMapping("/getById")

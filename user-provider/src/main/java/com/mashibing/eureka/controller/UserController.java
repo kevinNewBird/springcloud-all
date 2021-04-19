@@ -73,7 +73,7 @@ public class UserController implements UserApi {
          *
          * Hystrix干的就是这个事
          */
-        return "ok or bad, port:" + port;
+        return "provider project,ok or bad, port:" + port;
     }
 
     @Override
