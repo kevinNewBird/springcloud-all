@@ -7,6 +7,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -20,11 +21,12 @@ import java.util.StringJoiner;
  * @version: 1.0
  ***********************/
 @RestController
+@RefreshScope//用于处理热加载
 public class UserController {
 
 
     @Value("${myconfig}")
-    private String name;
+    private String config;
 
 
     @Value("${server.port}")
@@ -38,6 +40,11 @@ public class UserController {
 
     @Autowired
     private IUserServiceV2 userService;
+
+    @GetMapping("/config")
+    public String config() {
+        return config;
+    }
 
 
 
