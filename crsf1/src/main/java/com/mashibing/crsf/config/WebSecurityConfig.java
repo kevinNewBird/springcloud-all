@@ -8,10 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -20,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 /***********************
  * @Description: TODO 类描述<BR>
@@ -33,6 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -88,7 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //配置账号密码(properties配置文件就失效了)
+        //第一种方式: 配置账号密码(properties配置文件就失效了)
         auth
                 //内存用户
                 .inMemoryAuthentication()
@@ -98,6 +106,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .withUser("tom").password(encoder.encode("1233"))
                 .roles("user");
+        //第二种方式:
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+    }
+
+    /**
+     * Description: 第二种定义用户的方式 <BR>
+     *
+     * @param :
+     * @return {@link UserDetailsService}
+     * @author: zhao.song
+     * @date: 2021/4/28 15:48
+     */
+    @Bean
+    public UserDetailsService userDetailsService() {
+        InMemoryUserDetailsManager userManager = new InMemoryUserDetailsManager();
+        User user = new User("lily", encoder.encode("1234")
+                // 账户是否可用(是否被删除)
+                , true
+                // 账户没有过期
+                , true
+                // 密码没有过期: false用户密码过期无法登录(User credentials have expired)
+                , true
+                // 账户没被锁定(是否冻结),false账户将被锁定,无法登录(User account is locked)
+                , true
+                , Collections.singletonList(new SimpleGrantedAuthority("admin")));
+        userManager.createUser(user);
+        userManager.createUser(User.withUsername("bob").password(encoder.encode("1234")).roles("user").build());
+        return userManager;
     }
 
     /**
