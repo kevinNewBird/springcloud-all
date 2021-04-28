@@ -8,23 +8,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.Collections;
 
 /***********************
  * @Description: TODO 类描述<BR>
@@ -38,6 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    //这个必须放在UserDetailsService的上面注入,因为userDetailsService有使用到dataSource,否则会导致启动报错
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -96,6 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // 内存方式
         //第一种方式: 配置账号密码(properties配置文件就失效了)
         auth
                 //内存用户
@@ -108,10 +109,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("user");
         //第二种方式:
         auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+
+        // jdbc方式
+        JdbcUserDetailsManager userDetailsService = auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .getUserDetailsService();
+        if (!userDetailsService.userExists("cjdbc")) {
+            userDetailsService.createUser(User.withUsername("cjdbc")
+                    .password(encoder.encode("cjdbc")).roles("admin").build());
+        }
+
     }
 
+
     /**
-     * Description: 第二种定义用户的方式 <BR>
+     * Description: 第二种定义用户的方式(使用了bean注入的方式,
+     * configure(AuthenticationManagerBuilder)可以注释掉
+     * ,当然留着也不影响,两者可以同时存在共同作用) <BR>
      *
      * @param :
      * @return {@link UserDetailsService}
@@ -120,19 +134,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager userManager = new InMemoryUserDetailsManager();
-        User user = new User("lily", encoder.encode("1234")
-                // 账户是否可用(是否被删除)
-                , true
-                // 账户没有过期
-                , true
-                // 密码没有过期: false用户密码过期无法登录(User credentials have expired)
-                , true
-                // 账户没被锁定(是否冻结),false账户将被锁定,无法登录(User account is locked)
-                , true
-                , Collections.singletonList(new SimpleGrantedAuthority("admin")));
-        userManager.createUser(user);
-        userManager.createUser(User.withUsername("bob").password(encoder.encode("1234")).roles("user").build());
+        // 1.基于内存存储用户
+//        InMemoryUserDetailsManager userManager = new InMemoryUserDetailsManager();
+//        User user = new User("lily", encoder.encode("1234")
+//                // 账户是否可用(是否被删除)
+//                , true
+//                // 账户没有过期
+//                , true
+//                // 密码没有过期: false用户密码过期无法登录(User credentials have expired)
+//                , true
+//                // 账户没被锁定(是否冻结),false账户将被锁定,无法登录(User account is locked)
+//                , true
+//                , Collections.singletonList(new SimpleGrantedAuthority("admin")));
+//        userManager.createUser(user);
+//        userManager.createUser(User.withUsername("bob").password(encoder.encode("1234")).roles("user").build());
+
+        // 2.基于JDBC 用户存储
+        JdbcUserDetailsManager userManager = new JdbcUserDetailsManager(dataSource);
+        if (!userManager.userExists("jdbc")) {
+            userManager.createUser(User.withUsername("jdbc").password(encoder.encode("jdbc")).roles("admin", "xxoo").build());
+        }
+
+
         return userManager;
     }
 
