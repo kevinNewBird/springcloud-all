@@ -1,0 +1,15 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>CSRF登陆页面</title>
+</head>
+<body>
+<form action="/login" method="post">
+    <input name="username" type="text"><br>
+    <input name="password" type="password"><br>
+    <!-- security 下发了token-->
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <button type="submit">登录</button>
+</form>
+</body>
+</html>
