@@ -5,10 +5,12 @@
 </head>
 <body>
 <form action="/login" method="post">
-    <input name="username" type="text"><br>
-    <input name="password" type="password"><br>
+    用户名:<input name="username" type="text"><br>
+    密码:<input name="password" type="password"><br>
     <!-- security 下发了token-->
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+    验证码:<input name="code" type="text"><img src="http://localhost:9100/kaptcha"><br>
     <button type="submit">登录</button>
 </form>
 </body>
